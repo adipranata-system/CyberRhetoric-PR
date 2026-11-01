@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Rhetoric HelpDesk & Submission Portal</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased font-sans min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i class="fa-solid fa-graduation-cap text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-slate-900 leading-tight tracking-tight text-base sm:text-lg">Cyber Rhetoric Portal</h1>
+          <p class="text-xs text-slate-500">Pusat Layanan & Submisi Artikel Ilmiah</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="https://cyberrhetoric.unsia.ac.id/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 transition-all">
+          <i class="fa-solid fa-globe text-blue-600"></i>
+          <span>cyberrhetoric.unsia.ac.id</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-blue-400"></i>
+        </a>
+        <div id="systemStatusBadge">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            Memeriksa Status...
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== KONTEN UTAMA ==================== -->
+  <main class="max-w-4xl w-full mx-auto px-4 py-6 flex-grow space-y-6">
+
+    <!-- 1. BANNER PENGUMUMAN RESMI & PEDOMAN -->
+    <section class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1.5">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-semibold bg-white/10 backdrop-blur-md border border-white/10 text-blue-200">
+            <i class="fa-solid fa-bullhorn text-amber-300"></i> Pengumuman Resmi Redaksi
+          </div>
+          <h2 class="text-lg sm:text-xl font-bold tracking-tight">Penerimaan Naskah Gelombang 1 Dibuka</h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
+            Batas pengumpulan artikel adalah <span class="text-amber-300 font-semibold">31 Juli 2026, pukul 23:59 WIB</span>. Pastikan format naskah telah mematuhi pedoman resmi sebelum dikirim.
+          </p>
+        </div>
+
+        <div class="flex-shrink-0">
+          <a href="https://drive.google.com/file/d/1KMByou0u_VZy4311rcb9rdbaWDTxztaf/view" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xs sm:text-sm font-semibold border border-white/20 transition-all backdrop-blur-md shadow-xs">
+            <i class="fa-regular fa-file-pdf text-rose-400"></i>
+            Unduh Pedoman Penulisan (PDF)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. NAVIGASI TAB UTAMA -->
+    <div class="bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-xs flex gap-1">
+      <button id="tabBtnUpload" onclick="switchTab('upload')" class="flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-blue-600 text-white shadow-sm">
+        <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+        <span>Form Kirim Naskah</span>
+      </button>
+
+      <button id="tabBtnStatus" onclick="switchTab('status')" class="flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-50">
+        <i class="fa-solid fa-magnifying-glass text-base"></i>
+        <span>Lacak Status Naskah</span>
+      </button>
+    </div>
+
+    <!-- 3. KONTEN TAB 1: FORM SUBMISI -->
+    <div id="tabContentUpload" class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
+      <div>
+        <h3 class="text-lg font-bold text-slate-900 tracking-tight">Formulir Submisi Naskah Ilmiah</h3>
+        <p class="text-xs sm:text-sm text-slate-500">Lengkapi data identitas akademik dan unggah naskah artikel Anda.</p>
+      </div>
+
+      <!-- Banner Status Tertutup (Jika Sel C5 Tutup) -->
+      <div id="closedNotice" class="hidden rounded-xl p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium">
+        ⛔ <b>Layanan Submisi Ditutup:</b> Pengiriman naskah artikel ilmiah saat ini sedang tidak dibuka oleh dewan redaksi.
+      </div>
+
+      <form id="submissionForm" class="space-y-4" onsubmit="handleFormSubmit(event)">
+        <!-- PEMILIH KATEGORI PENULIS (INTERNAL VS EKSTERNAL) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Kategori Penulis <span class="text-rose-500">*</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-blue-600 bg-blue-50/60 cursor-pointer transition-all hover:bg-blue-50" id="labelKatInternal">
+              <input type="radio" name="kategoriPenulis" value="INTERNAL" checked onchange="handleCategoryChange()" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center flex-shrink-0 text-base shadow-xs">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div>
+                <span class="block text-xs sm:text-sm font-bold text-slate-900">Mahasiswa UNSIA</span>
+                <span class="block text-[11px] text-slate-500">Internal Universitas Siber Asia</span>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50/50 cursor-pointer transition-all hover:bg-slate-100" id="labelKatEksternal">
+              <input type="radio" name="kategoriPenulis" value="EKSTERNAL" onchange="handleCategoryChange()" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+              <div class="w-9 h-9 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0 text-base shadow-xs" id="iconKatEksternal">
+                <i class="fa-solid fa-globe"></i>
+              </div>
+              <div>
+                <span class="block text-xs sm:text-sm font-bold text-slate-900">Umum / Luar Kampus</span>
+                <span class="block text-[11px] text-slate-500">Mahasiswa Luar, Dosen, Peneliti, Praktisi</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Kolom Khusus Eksternal: Asal Instansi / Universitas -->
+        <div id="fieldInstansiLuar" class="hidden">
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Asal Universitas / Instansi Afiliasi <span class="text-rose-500">*</span></label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <i class="fa-solid fa-landmark text-sm"></i>
+            </span>
+            <input type="text" id="instansi" placeholder="Contoh: Universitas Indonesia / Praktisi Media" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+          </div>
+        </div>
+
+        <!-- Grid Identitas (NIM/ID & Nama) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" id="labelNim">NIM Mahasiswa <span class="text-rose-500">*</span></label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-id-card text-sm"></i>
+              </span>
+              <input type="text" id="nim" required placeholder="Contoh: 220401010001" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap & Gelar <span class="text-rose-500">*</span></label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-user text-sm"></i>
+              </span>
+              <input type="text" id="nama" required placeholder="Nama lengkap Anda" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Kelas & Prodi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div id="fieldKelasWrapper">
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kelas <span class="text-rose-500">*</span></label>
+            <input type="text" id="kelas" placeholder="Contoh: KM401" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+          </div>
+
+          <div id="fieldProdiWrapper">
+            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Program Studi / Departemen <span class="text-rose-500">*</span></label>
+            <input type="text" id="prodi" required placeholder="Contoh: Ilmu Komunikasi" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+          </div>
+        </div>
+
+        <!-- Mata Kuliah / Topik Kajian -->
+        <div id="fieldMkWrapper">
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" id="labelMk">Mata Kuliah <span class="text-rose-500">*</span></label>
+          <input type="text" id="mk" placeholder="Tuliskan nama mata kuliah..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+        </div>
+
+        <!-- Judul Naskah -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Judul Naskah Artikel <span class="text-rose-500">*</span></label>
+          <textarea id="judul" rows="2" required placeholder="Tuliskan judul lengkap naskah artikel Anda..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all resize-none"></textarea>
+        </div>
+
+        <!-- Unggah Berkas & Chip Preview Interaktif -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+            Unggah Berkas Naskah (.pdf atau .docx) <span class="text-rose-500">*</span>
+          </label>
+          
+          <!-- Drop Area Awal -->
+          <div id="dropAreaContainer" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-5 text-center bg-slate-50/50 hover:bg-blue-50/20 transition-all cursor-pointer relative">
+            <input type="file" id="fileInput" accept=".pdf,.docx" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewSelectedFile(this)">
+            <div class="space-y-2 pointer-events-none">
+              <div class="w-10 h-10 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                <i class="fa-solid fa-arrow-up-from-bracket text-lg"></i>
+              </div>
+              <p class="text-xs sm:text-sm font-semibold text-slate-700">Pilih berkas naskah dari perangkat atau seret ke sini</p>
+              <p class="text-[11px] text-slate-400">Format yang diterima: PDF atau DOCX • Maksimal 10 MB</p>
+            </div>
+          </div>
+
+          <!-- Chip Berkas Terpilih (Muncul jika file sudah dipilih) -->
+          <div id="filePreviewCard" class="hidden mt-2 p-3.5 rounded-xl border border-blue-200 bg-blue-50/50 flex items-center justify-between gap-3 transition-all">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center flex-shrink-0 text-lg shadow-xs" id="filePreviewIcon">
+                <i class="fa-regular fa-file-pdf"></i>
+              </div>
+              <div class="overflow-hidden">
+                <span class="block text-xs sm:text-sm font-bold text-slate-900 truncate" id="filePreviewName">nama_berkas.pdf</span>
+                <span class="block text-[11px] text-slate-500" id="filePreviewSize">0.00 MB</span>
+              </div>
+            </div>
+            <button type="button" onclick="clearSelectedFile()" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all flex-shrink-0" title="Hapus Berkas">
+              <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+          </div>
+
+          <!-- Progress Bar Uploading -->
+          <div id="uploadProgressBarContainer" class="hidden mt-3 space-y-1.5">
+            <div class="flex justify-between text-xs font-semibold text-slate-600">
+              <span id="progressStatusText">Mengunggah naskah ke Google Drive...</span>
+              <span id="progressPercentText" class="text-blue-600">0%</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+              <div id="uploadProgressBar" class="h-full bg-blue-600 rounded-full transition-all duration-300 w-0"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tombol Kirim -->
+        <button type="submit" id="btnSubmitForm" class="w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm shadow-md shadow-blue-600/20 flex items-center justify-center gap-2 transition-all">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Kirim Naskah Artikel Sekarang</span>
+        </button>
+      </form>
+
+      <!-- Alert Notifikasi Hasil Submisi -->
+      <div id="formAlert" class="hidden rounded-xl p-4 text-xs sm:text-sm font-medium"></div>
+    </div>
+
+    <!-- 4. KONTEN TAB 2: PELACAKAN STATUS NASKAH -->
+    <div id="tabContentStatus" class="hidden bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
+      <div>
+        <h3 class="text-lg font-bold text-slate-900 tracking-tight">Pelacakan Status Naskah</h3>
+        <p class="text-xs sm:text-sm text-slate-500">Gunakan NIM atau Kode Registrasi unik Anda untuk melacak proses telaah redaksi.</p>
+      </div>
+
+      <!-- Input Pencarian Fleksibel -->
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <div class="relative flex-grow">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </span>
+          <input type="text" id="inputSearchQuery" onkeypress="handleSearchKeyPress(event)" placeholder="Masukkan NIM (contoh: 220401010001) atau Kode Registrasi" class="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all">
+        </div>
+        <button onclick="handleSearchStatus()" id="btnSearchStatus" class="py-2.5 px-6 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+          <span>Lacak Naskah</span>
+        </button>
+      </div>
+
+      <!-- Hasil Pencarian -->
+      <div id="statusListContainer" class="space-y-4 pt-2">
+        <div class="text-center py-10 text-slate-400 space-y-2">
+          <i class="fa-regular fa-folder-open text-3xl text-slate-300"></i>
+          <p class="text-xs sm:text-sm">Masukkan NIM atau Kode Registrasi Anda untuk melihat riwayat submisi.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ACCORDION FAQ -->
+    <section class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+      <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+        <i class="fa-solid fa-circle-question text-blue-600 text-lg"></i>
+        <h3 class="font-bold text-slate-900 text-sm sm:text-base">Pertanyaan yang Sering Diajukan (FAQ)</h3>
+      </div>
+
+      <div class="space-y-2.5">
+        <div class="border border-slate-200/70 rounded-xl overflow-hidden transition-all">
+          <button onclick="toggleFaq(this)" class="w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-800 hover:bg-slate-50 flex items-center justify-between gap-4">
+            <span>Berapa lama proses verifikasi dan kurasi naskah artikel?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+          </button>
+          <div class="px-4 pb-3.5 pt-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 hidden bg-slate-50/50 leading-relaxed">
+            Kurasi oleh dewan redaksi memakan waktu 2 hingga 4 hari kerja. Anda dapat memantau catatan evaluasi secara langsung pada tab <b>Lacak Status Naskah</b>.
+          </div>
+        </div>
+
+        <div class="border border-slate-200/70 rounded-xl overflow-hidden transition-all">
+          <button onclick="toggleFaq(this)" class="w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-800 hover:bg-slate-50 flex items-center justify-between gap-4">
+            <span>Apakah saya bisa mengirimkan naskah baru jika naskah lama belum selesai?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+          </button>
+          <div class="px-4 pb-3.5 pt-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 hidden bg-slate-50/50 leading-relaxed">
+            Tidak bisa. Sistem memberlakukan aturan 1 mahasiswa hanya memiliki 1 naskah aktif berstatus <code>PENDING</code>. Anda baru dapat mengirim submisi baru jika artikel sebelumnya dinyatakan <code>PUBLISHED</code> atau <code>REJECTED</code> (revisi).
+          </div>
+        </div>
+
+        <div class="border border-slate-200/70 rounded-xl overflow-hidden transition-all">
+          <button onclick="toggleFaq(this)" class="w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-800 hover:bg-slate-50 flex items-center justify-between gap-4">
+            <span>Bagaimana jika saya lupa mencatat Kode Registrasi?</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i>
+          </button>
+          <div class="px-4 pb-3.5 pt-1 text-xs sm:text-sm text-slate-600 border-t border-slate-100 hidden bg-slate-50/50 leading-relaxed">
+            Tenang saja. Tab pelacakan mendukung pencarian menggunakan <b>NIM</b> Anda. Seluruh riwayat naskah yang pernah Anda kirimkan akan otomatis dimunculkan.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. KARTU LAYANAN BANTUAN & KONTAK RESMI TIM PR (EMAIL SAJA) -->
+    <section class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-800">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="space-y-2">
+          <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30">
+            <i class="fa-solid fa-envelope-open-text"></i> Jalur Komunikasi Resmi Tim PR
+          </div>
+          <h3 class="text-base sm:text-lg font-bold tracking-tight">Pusat Layanan Mahasiswa (HelpDesk)</h3>
+          <p class="text-xs sm:text-sm text-slate-300">
+            Hubungi tim kami melalui surel resmi untuk pembatalan berkas keliru, konfirmasi revisi, atau kendala teknis.
+          </p>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-300 pt-1">
+            <span class="inline-flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-amber-400"></i> <b>Jam Layanan:</b> Senin – Jumat (08:00 – 16:00 WIB)
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-3.5 text-xs text-slate-200 max-w-sm flex-shrink-0 space-y-2">
+          <div>
+            <span class="text-slate-400 block text-[11px] uppercase tracking-wider font-semibold">Format Subjek Surel:</span>
+            <code class="text-amber-300 font-mono text-[11px] bg-black/30 px-2 py-0.5 rounded block mt-1 break-all">[KENDALA SUBMISI] - NIM - Nama Lengkap</code>
+          </div>
+          <a href="mailto:cyberrhetoricunsia@gmail.com?subject=%5BKENDALA%20SUBMISI%5D%20-%20NIM%20-%20Nama%20Lengkap" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-lg text-xs transition-all shadow-sm">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+            <span>Kirim Email Redaksi</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 mt-10">
+    <div class="max-w-4xl mx-auto px-4 py-8 space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-blue-600 text-sm"></i>
+          <span class="font-medium text-slate-700">Cyber Rhetoric Submisi & HelpDesk Engine v16.0</span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+          <a href="https://cyberrhetoric.unsia.ac.id/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-600 font-semibold hover:text-blue-600 transition-colors">
+            <i class="fa-solid fa-globe text-slate-400"></i> cyberrhetoric.unsia.ac.id
+          </a>
+          <span class="text-slate-300">|</span>
+          <span class="text-slate-400">Pusat Layanan:</span>
+          <a href="mailto:cyberrhetoricunsia@gmail.com?subject=%5BKENDALA%20SUBMISI%5D%20-%20NIM%20-%20Nama%20Lengkap" class="inline-flex items-center gap-1.5 text-blue-600 font-semibold hover:underline">
+            <i class="fa-solid fa-envelope text-xs"></i> cyberrhetoricunsia@gmail.com
+          </a>
+        </div>
+      </div>
+
+      <!-- Legalitas, Atribusi Pengembang & Hak Cipta -->
+      <div class="pt-4 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-2 text-center md:text-left text-[11px] text-slate-400 leading-relaxed">
+        <p>
+          Sistem ini dirancang dan dikembangkan secara eksklusif oleh <span class="font-semibold text-slate-700">Adi Pranata</span> untuk tata kelola naskah ilmiah Cyber Rhetoric.
+        </p>
+        <p class="text-slate-500 font-medium">
+          © 2026 Hak Cipta Dilindungi Undang-Undang Republik Indonesia. Seluruh hak cipta dan kepemilikan intelektual dilindungi secara hukum.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== SCRIPT FRONTEND ==================== -->
+  <script>
+    // URL Backend Web App Resmi Google Apps Script
+    const API_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbzF5J-ZXLhYSRbHsu8GowKaaTsA7Pz38m8fZTZYMqdkwJGP7qhCR0SKc4nZcTXM1glasA/exec";
+
+    // 1. Inisialisasi: Periksa Status Buka/Tutup Submisi
+    window.addEventListener("DOMContentLoaded", function() {
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            updateSystemBadge(res.isOpen);
+          })
+          .withFailureHandler(function() {
+            updateSystemBadge(true);
+          })
+          .checkSystemStatus();
+      } else {
+        // Fallback untuk GitHub Pages / Google Sites / Pratinjau
+        fetch(`${API_ENDPOINT_URL}?action=checkStatus`)
+          .then(res => res.json())
+          .then(data => updateSystemBadge(data.isOpen))
+          .catch(() => updateSystemBadge(true));
+      }
+    });
+
+    // Penanganan Perubahan Kategori Penulis (Opsi A dengan Visual Icon)
+    function handleCategoryChange() {
+      const isInternal = document.querySelector('input[name="kategoriPenulis"]:checked').value === "INTERNAL";
+      const labelInternal = document.getElementById("labelKatInternal");
+      const labelEksternal = document.getElementById("labelKatEksternal");
+      const iconEksternal = document.getElementById("iconKatEksternal");
+      const fieldInstansiLuar = document.getElementById("fieldInstansiLuar");
+      const inputInstansi = document.getElementById("instansi");
+      const labelNim = document.getElementById("labelNim");
+      const inputNim = document.getElementById("nim");
+      const fieldKelasWrapper = document.getElementById("fieldKelasWrapper");
+      const inputKelas = document.getElementById("kelas");
+      const fieldMkWrapper = document.getElementById("fieldMkWrapper");
+      const inputMk = document.getElementById("mk");
+
+      if (isInternal) {
+        labelInternal.className = "flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-blue-600 bg-blue-50/60 cursor-pointer transition-all hover:bg-blue-50";
+        labelEksternal.className = "flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50/50 cursor-pointer transition-all hover:bg-slate-100";
+        if (iconEksternal) {
+          iconEksternal.className = "w-9 h-9 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0 text-base shadow-xs";
+        }
+        
+        fieldInstansiLuar.classList.add("hidden");
+        inputInstansi.value = "";
+
+        fieldKelasWrapper.classList.remove("hidden");
+        if (inputKelas.value === "-") inputKelas.value = "";
+        
+        fieldMkWrapper.classList.remove("hidden");
+        if (inputMk.value === "-") inputMk.value = "";
+
+        labelNim.innerHTML = 'NIM Mahasiswa <span class="text-rose-500">*</span>';
+        inputNim.placeholder = "Contoh: 220401010001";
+      } else {
+        labelEksternal.className = "flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-blue-600 bg-blue-50/60 cursor-pointer transition-all hover:bg-blue-50";
+        labelInternal.className = "flex items-center gap-3.5 p-3.5 rounded-xl border-2 border-slate-200 bg-slate-50/50 cursor-pointer transition-all hover:bg-slate-100";
+        if (iconEksternal) {
+          iconEksternal.className = "w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center flex-shrink-0 text-base shadow-xs";
+        }
+
+        fieldInstansiLuar.classList.remove("hidden");
+
+        fieldKelasWrapper.classList.add("hidden");
+        inputKelas.value = "-";
+        
+        fieldMkWrapper.classList.add("hidden");
+        inputMk.value = "-";
+
+        labelNim.innerHTML = 'NIM / NIDN / No. Identitas <span class="text-rose-500">*</span>';
+        inputNim.placeholder = "Masukkan NIM luar / NIDN / No. KTP";
+      }
+    }
+
+    function updateSystemBadge(isOpen) {
+      const badge = document.getElementById("systemStatusBadge");
+      const btnSubmit = document.getElementById("btnSubmitForm");
+      const closedNotice = document.getElementById("closedNotice");
+
+      if (isOpen) {
+        badge.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Submisi: BUKA
+          </span>
+        `;
+        if (closedNotice) closedNotice.classList.add("hidden");
+        if (btnSubmit) btnSubmit.disabled = false;
+      } else {
+        badge.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            Submisi: TUTUP
+          </span>
+        `;
+        if (closedNotice) closedNotice.classList.remove("hidden");
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.classList.add("opacity-50", "cursor-not-allowed");
+        }
+      }
+    }
+
+    // 2. Fungsi Pengalih Tab
+    function switchTab(tab) {
+      const btnUpload = document.getElementById('tabBtnUpload');
+      const btnStatus = document.getElementById('tabBtnStatus');
+      const contentUpload = document.getElementById('tabContentUpload');
+      const contentStatus = document.getElementById('tabContentStatus');
+
+      if (tab === 'upload') {
+        btnUpload.className = 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-blue-600 text-white shadow-sm';
+        btnStatus.className = 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-50';
+        contentUpload.classList.remove('hidden');
+        contentStatus.classList.add('hidden');
+      } else {
+        btnStatus.className = 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-blue-600 text-white shadow-sm';
+        btnUpload.className = 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:text-slate-900 hover:bg-slate-50';
+        contentStatus.classList.remove('hidden');
+        contentUpload.classList.add('hidden');
+      }
+    }
+
+    // 3. Menampilkan File Preview Card & Tombol Hapus (Poin 2)
+    function previewSelectedFile(input) {
+      const dropArea = document.getElementById('dropAreaContainer');
+      const previewCard = document.getElementById('filePreviewCard');
+      const nameEl = document.getElementById('filePreviewName');
+      const sizeEl = document.getElementById('filePreviewSize');
+      const iconEl = document.getElementById('filePreviewIcon');
+
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        
+        nameEl.innerText = file.name;
+        sizeEl.innerText = `${fileSizeMB} MB`;
+
+        if (file.name.toLowerCase().endsWith('.docx')) {
+          iconEl.innerHTML = '<i class="fa-regular fa-file-word text-blue-200"></i>';
+        } else {
+          iconEl.innerHTML = '<i class="fa-regular fa-file-pdf text-rose-200"></i>';
+        }
+
+        dropArea.classList.add('hidden');
+        previewCard.classList.remove('hidden');
+      }
+    }
+
+    function clearSelectedFile() {
+      const input = document.getElementById('fileInput');
+      const dropArea = document.getElementById('dropAreaContainer');
+      const previewCard = document.getElementById('filePreviewCard');
+
+      input.value = "";
+      previewCard.classList.add('hidden');
+      dropArea.classList.remove('hidden');
+    }
+
+    // 4. Handle Submisi Form dengan Progress Bar & Tombol Cetak Tanda Terima (Poin 2 & 5)
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitForm');
+      const alertBox = document.getElementById('formAlert');
+      const fileInput = document.getElementById('fileInput');
+      const progressContainer = document.getElementById('uploadProgressBarContainer');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const progressPercent = document.getElementById('progressPercentText');
+
+      // Ambil nilai field secara aman
+      const kategori = document.querySelector('input[name="kategoriPenulis"]:checked').value;
+      const nimVal = document.getElementById('nim').value.trim();
+      const namaVal = document.getElementById('nama').value.trim();
+      const prodiVal = document.getElementById('prodi').value.trim();
+      const judulVal = document.getElementById('judul').value.trim();
+      const instansiVal = (kategori === "INTERNAL") ? "Universitas Siber Asia" : (document.getElementById('instansi').value.trim() || "-");
+      const kelasVal = (kategori === "INTERNAL") ? document.getElementById('kelas').value.trim() : "-";
+      const mkVal = (kategori === "INTERNAL") ? document.getElementById('mk').value.trim() : "-";
+
+      // Validasi Khusus Internal
+      if (kategori === "INTERNAL") {
+        if (!kelasVal || kelasVal === "-") {
+          alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200 block';
+          alertBox.innerHTML = '⚠️ <b>Kelas Wajib Diisi:</b> Mahasiswa UNSIA wajib mengisi kelas perkuliahan.';
+          return;
+        }
+        if (!mkVal || mkVal === "-") {
+          alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200 block';
+          alertBox.innerHTML = '⚠️ <b>Mata Kuliah Wajib Diisi:</b> Silakan tuliskan nama mata kuliah.';
+          return;
+        }
+      } else {
+        if (!instansiVal || instansiVal === "-") {
+          alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200 block';
+          alertBox.innerHTML = '⚠️ <b>Instansi Wajib Diisi:</b> Peserta luar kampus wajib mengisi nama universitas atau instansi asal.';
+          return;
+        }
+      }
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200 block';
+        alertBox.innerHTML = '⚠️ <b>Berkas Belum Dipilih:</b> Silakan pilih berkas naskah Anda (.pdf atau .docx) terlebih dahulu.';
+        return;
+      }
+
+      const file = fileInput.files[0];
+      if (file.size > 10 * 1024 * 1024) {
+        alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-amber-50 text-amber-800 border border-amber-200 block';
+        alertBox.innerHTML = '⚠️ <b>Berkas Terlalu Besar:</b> Ukuran maksimal yang diizinkan adalah 10 MB.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Sedang Mengirim Naskah ke Server...</span>`;
+      alertBox.classList.add("hidden");
+
+      // Aktifkan progress bar
+      progressContainer.classList.remove('hidden');
+      progressBar.style.width = '30%';
+      progressPercent.innerText = '30%';
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        progressBar.style.width = '60%';
+        progressPercent.innerText = '60%';
+
+        function onSubmissionSuccess(res) {
+          progressBar.style.width = '100%';
+          progressPercent.innerText = '100%';
+
+          setTimeout(() => {
+            progressContainer.classList.add('hidden');
+            progressBar.style.width = '0%';
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Naskah Artikel Sekarang</span>`;
+            
+            alertBox.className = 'rounded-xl p-5 text-xs sm:text-sm font-medium bg-emerald-50 text-emerald-900 border border-emerald-200 block space-y-3';
+            alertBox.innerHTML = `
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-base font-bold text-emerald-950">
+                  <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                  <span>Submisi Naskah Berhasil Disimpan!</span>
+                </div>
+                <p class="text-emerald-800 leading-relaxed">
+                  Naskah artikel dan data Anda telah berhasil dicatat ke sistem dengan Kode Registrasi:
+                </p>
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                  <span class="px-3 py-1.5 bg-emerald-100 font-mono font-bold text-emerald-950 rounded-lg text-sm tracking-wide border border-emerald-300" id="successRegCode">${res.regCode}</span>
+                  <button type="button" onclick="copyRegCode('${res.regCode}')" class="px-3 py-1.5 bg-white border border-emerald-300 hover:bg-emerald-100 text-emerald-900 font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs transition-all">
+                    <i class="fa-regular fa-copy"></i> Salin Kode
+                  </button>
+                  <button type="button" onclick="printSubmissionReceipt('${res.regCode}', '${res.nama}', '${res.nim}', '${res.judul}', '${res.instansi}')" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-lg flex items-center gap-1.5 shadow-xs transition-all">
+                    <i class="fa-solid fa-print"></i> Cetak Tanda Terima
+                  </button>
+                </div>
+                <p class="text-[11px] text-emerald-700 pt-1">Gunakan NIM atau Kode Registrasi di atas untuk memantau proses kurasi pada tab <b>Lacak Status Naskah</b>.</p>
+              </div>
+            `;
+            document.getElementById('submissionForm').reset();
+            clearSelectedFile();
+            handleCategoryChange();
+          }, 400);
+        }
+
+        function onSubmissionFailure(err) {
+          progressContainer.classList.add('hidden');
+          progressBar.style.width = '0%';
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Kirim Naskah Artikel Sekarang</span>`;
+          alertBox.className = 'rounded-xl p-4 text-xs sm:text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200 block';
+          alertBox.innerHTML = `❌ <b>Gagal Menyimpan ke Database:</b> ${err && err.message ? err.message : err}`;
+        }
+
+        // Pengecekan Environment: Jika dijalankan di dalam Web App GAS
+        if (typeof google !== "undefined" && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(onSubmissionSuccess)
+            .withFailureHandler(onSubmissionFailure)
+            .submitArticle(
+              kategori,
+              instansiVal,
+              nimVal,
+              namaVal,
+              kelasVal,
+              prodiVal,
+              mkVal,
+              judulVal,
+              file.name,
+              evt.target.result
+            );
+        } else {
+          // JIKA DIJALANKAN DARI GITHUB PAGES / GOOGLE SITES / PREVIEW (Fetch HTTP POST JSON)
+          const payload = {
+            kategori: kategori,
+            instansi: instansiVal,
+            nim: nimVal,
+            nama: namaVal,
+            kelas: kelasVal,
+            prodi: prodiVal,
+            mk: mkVal,
+            judul: judulVal,
+            fileName: file.name,
+            fileData: evt.target.result
+          };
+
+          fetch(API_ENDPOINT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          })
+          .then(res => res.json())
+          .then(json => {
+            if (json.success) {
+              onSubmissionSuccess(json.data);
+            } else {
+              onSubmissionFailure(new Error(json.message || "Gagal memproses data di server."));
+            }
+          })
+          .catch(err => {
+            onSubmissionFailure(new Error("Koneksi gagal atau CORS dibatasi. Pastikan deployment berstatus 'Anyone'."));
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 5. Cetak Bukti Submisi Resmi (Poin 5)
+    function printSubmissionReceipt(regCode, nama, nim, judul, instansi) {
+      const currentDate = new Date().toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+      const printWindow = window.open('', '', 'width=750,height=850');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Bukti Submisi Naskah - ${regCode}</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 40px; color: #1e293b; line-height: 1.5; }
+            .header { border-bottom: 2px solid #0f172a; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-start; }
+            .title { font-size: 20px; font-weight: bold; color: #0f172a; margin: 0; }
+            .subtitle { font-size: 13px; color: #64748b; margin: 4px 0 0; }
+            .badge { display: inline-block; padding: 4px 10px; background: #e0f2fe; color: #0369a1; border-radius: 6px; font-weight: bold; font-size: 13px; }
+            .receipt-box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 25px; background: #f8fafc; }
+            .row { display: flex; margin-bottom: 12px; font-size: 14px; }
+            .label { width: 170px; font-weight: 600; color: #475569; }
+            .value { flex: 1; color: #0f172a; }
+            .code-box { font-family: monospace; font-size: 18px; font-weight: bold; background: #e2e8f0; padding: 6px 12px; border-radius: 6px; display: inline-block; }
+            .footer { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <h1 class="title">CYBER RHETORIC SUBMISSION PORTAL</h1>
+              <p class="subtitle">Tanda Terima & Bukti Pendaftaran Naskah Ilmiah</p>
+            </div>
+            <div class="badge">STATUS: TERKIRIM</div>
+          </div>
+
+          <div class="receipt-box">
+            <div class="row">
+              <div class="label">Kode Registrasi:</div>
+              <div class="value"><span class="code-box">${regCode}</span></div>
+            </div>
+            <div class="row">
+              <div class="label">Waktu Submisi:</div>
+              <div class="value">${currentDate} WIB</div>
+            </div>
+            <div class="row">
+              <div class="label">Nama Penulis:</div>
+              <div class="value"><b>${nama}</b></div>
+            </div>
+            <div class="row">
+              <div class="label">NIM / Identitas:</div>
+              <div class="value">${nim}</div>
+            </div>
+            <div class="row">
+              <div class="label">Instansi / Afiliasi:</div>
+              <div class="value">${instansi || 'Universitas Siber Asia'}</div>
+            </div>
+            <div class="row">
+              <div class="label">Judul Naskah:</div>
+              <div class="value">"${judul}"</div>
+            </div>
+          </div>
+
+          <p style="font-size: 13px; color: #475569;">
+            * Dokumen ini merupakan bukti sah bahwa naskah Anda telah diterima oleh dewan redaksi Cyber Rhetoric. Gunakan Kode Registrasi atau NIM Anda untuk memantau status telaah secara mandiri.
+          </p>
+
+          <div class="footer">
+            <span>Sistem Submisi & Tata Kelola Naskah oleh Adi Pranata</span>
+            <span>https://script.google.com/macros/s/AKfycbzF5J-ZXLhYSRbHsu8GowKaaTsA7Pz38m8fZTZYMqdkwJGP7qhCR0SKc4nZcTXM1glasA/exec</span>
+          </div>
+          <script>
+            window.onload = function() { window.print(); }
+          <\/script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+
+    // 6. Salin Kode Registrasi ke Clipboard
+    function copyRegCode(code) {
+      const tempInput = document.createElement("input");
+      tempInput.value = code;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand("copy");
+        const codeEl = document.getElementById("successRegCode");
+        if (codeEl) {
+          const original = codeEl.innerText;
+          codeEl.innerText = "✓ Tersalin!";
+          setTimeout(() => { codeEl.innerText = original; }, 1500);
+        }
+      } catch (err) {}
+      document.body.removeChild(tempInput);
+    }
+
+    // 7. Handle Tombol Enter pada Pencarian Status
+    function handleSearchKeyPress(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearchStatus();
+      }
+    }
+
+    // 8. Render Visual Timeline / Stepper Status Naskah (Poin 4)
+    function renderTimelineStepper(status) {
+      const st = String(status).toUpperCase();
+      let step1Active = true;
+      let step2Active = false;
+      let step3Active = false;
+      let step3Text = "Keputusan";
+      let step3Color = "border-slate-300 text-slate-400";
+      let step3Icon = "fa-circle-check";
+
+      if (st.includes('PUBLISHED')) {
+        step2Active = true;
+        step3Active = true;
+        step3Text = "Disetujui (Published)";
+        step3Color = "border-emerald-500 bg-emerald-500 text-white";
+      } else if (st.includes('REJECTED') || st.includes('REVISI')) {
+        step2Active = true;
+        step3Active = true;
+        step3Text = "Perlu Revisi";
+        step3Color = "border-rose-500 bg-rose-500 text-white";
+        step3Icon = "fa-triangle-exclamation";
+      } else {
+        // Status PENDING
+        step2Active = true; // Sedang di tahap antrean/review
+        step3Text = "Keputusan Redaksi";
+      }
+
+      return `
+        <div class="pt-3 pb-1">
+          <div class="flex items-center justify-between relative max-w-md mx-auto">
+            <!-- Garis Penghubung Step 1-2 -->
+            <div class="absolute left-6 right-1/2 top-3.5 h-0.5 ${step2Active ? 'bg-blue-600' : 'bg-slate-200'} -z-0"></div>
+            <!-- Garis Penghubung Step 2-3 -->
+            <div class="absolute left-1/2 right-6 top-3.5 h-0.5 ${step3Active ? (st.includes('REJECTED') ? 'bg-rose-500' : 'bg-emerald-500') : 'bg-slate-200'} -z-0"></div>
+
+            <!-- Step 1: Terkirim -->
+            <div class="flex flex-col items-center text-center z-10">
+              <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shadow-xs font-bold">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-800 mt-1.5">Terkirim</span>
+            </div>
+
+            <!-- Step 2: Telaah Redaksi -->
+            <div class="flex flex-col items-center text-center z-10">
+              <div class="w-7 h-7 rounded-full ${step2Active && !step3Active ? 'bg-blue-600 text-white ring-4 ring-blue-100 animate-pulse' : (step2Active ? 'bg-blue-600 text-white' : 'bg-white border-2 border-slate-300 text-slate-400')} flex items-center justify-center text-xs shadow-xs font-bold">
+                <i class="fa-solid fa-glasses"></i>
+              </div>
+              <span class="text-[11px] font-semibold ${step2Active && !step3Active ? 'text-blue-600 font-bold' : 'text-slate-800'} mt-1.5">Telaah Redaksi</span>
+            </div>
+
+            <!-- Step 3: Keputusan Akhir -->
+            <div class="flex flex-col items-center text-center z-10">
+              <div class="w-7 h-7 rounded-full ${step3Active ? step3Color : 'bg-white border-2 border-slate-300 text-slate-400'} flex items-center justify-center text-xs shadow-xs font-bold">
+                <i class="fa-solid ${step3Icon}"></i>
+              </div>
+              <span class="text-[11px] font-semibold ${step3Active ? (st.includes('REJECTED') ? 'text-rose-600 font-bold' : 'text-emerald-600 font-bold') : 'text-slate-500'} mt-1.5">${step3Text}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 9. Handle Pencarian Status (NIM atau Kode Registrasi)
+    function handleSearchStatus() {
+      const inputEl = document.getElementById('inputSearchQuery');
+      const query = inputEl.value.trim();
+      const container = document.getElementById('statusListContainer');
+      const btn = document.getElementById('btnSearchStatus');
+
+      if (!query) {
+        container.innerHTML = `<div class="p-4 rounded-xl bg-amber-50 text-amber-800 text-xs sm:text-sm">Silakan ketikkan NIM atau Kode Registrasi terlebih dahulu.</div>`;
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Mencari...</span>`;
+      container.innerHTML = `<div class="text-center py-8 text-slate-400"><i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i><p class="text-xs">Mengambil data dari basis data redaksi...</p></div>`;
+
+      function renderResults(list) {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Lacak Naskah</span>`;
+
+        if (!list || list.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-8 text-slate-500 bg-slate-50 rounded-xl border border-slate-200/80 p-4">
+              <i class="fa-solid fa-circle-exclamation text-slate-400 text-2xl mb-2"></i>
+              <p class="text-xs sm:text-sm font-semibold">Tidak ditemukan naskah dengan kata kunci: <span class="text-slate-800">${query}</span></p>
+              <p class="text-xs text-slate-400 mt-1">Pastikan penulisan NIM atau Kode Registrasi sudah tepat.</p>
+            </div>
+          `;
+          return;
+        }
+
+        let cardsHtml = `<div class="text-xs font-semibold text-slate-500 mb-2">Ditemukan ${list.length} riwayat naskah terkait "${query}":</div>`;
+
+        list.forEach(item => {
+          let statusBadge = '';
+          const stUpper = String(item.status).toUpperCase();
+
+          if (stUpper.indexOf('PUBLISHED') !== -1) {
+            statusBadge = '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><i class="fa-solid fa-check mr-1"></i> PUBLISHED</span>';
+          } else if (stUpper.indexOf('REJECTED') !== -1) {
+            statusBadge = '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200"><i class="fa-solid fa-xmark mr-1"></i> REVISI / REJECTED</span>';
+          } else {
+            statusBadge = '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200"><i class="fa-solid fa-clock mr-1"></i> PENDING (Dalam Antrean)</span>';
+          }
+
+          const identityInfo = (item.kelas && item.kelas !== "-") 
+            ? `ID/NIM: ${item.nim} • Kelas: ${item.kelas}` 
+            : `ID/Identitas: ${item.nim} • Instansi: ${item.instansi}`;
+
+          cardsHtml += `
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                <div class="flex items-center gap-2">
+                  ${statusBadge}
+                  <span class="text-xs text-slate-400">• ${item.tanggal}</span>
+                </div>
+                <span class="text-xs font-mono font-bold text-slate-500">ID: ${item.regCode}</span>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm sm:text-base leading-snug">${item.judul}</h4>
+                <p class="text-xs text-slate-500 mt-1">Pengirim: <b class="text-slate-700">${item.nama}</b> (${identityInfo})</p>
+              </div>
+
+              <div class="bg-slate-50/80 rounded-xl p-3 border border-slate-100">
+                <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Tahapan Telaah Artikel:</span>
+                ${renderTimelineStepper(item.status)}
+              </div>
+
+              <div class="bg-slate-50 rounded-lg p-3 text-xs text-slate-600 border border-slate-100">
+                <b class="text-slate-700 block mb-0.5"><i class="fa-regular fa-comment-dots mr-1"></i> Catatan Redaksi:</b>
+                ${item.catatan}
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <a href="${item.fileUrl}" target="_blank" class="text-xs font-semibold text-blue-600 hover:text-blue-800 inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Lihat Berkas di Google Drive
+                </a>
+                <button type="button" onclick="printSubmissionReceipt('${item.regCode}', '${item.nama}', '${item.nim}', '${item.judul}', '${item.instansi}')" class="text-xs font-semibold text-slate-600 hover:text-slate-900 inline-flex items-center gap-1.5">
+                  <i class="fa-solid fa-print"></i> Cetak Ulang Tanda Terima
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = cardsHtml;
+      }
+
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(renderResults)
+          .withFailureHandler(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = `<span>Lacak Naskah</span>`;
+            container.innerHTML = `<div class="p-4 rounded-xl bg-rose-50 text-rose-800 text-xs sm:text-sm">❌ ${err.message}</div>`;
+          })
+          .searchArticleStatus(query);
+      } else {
+        // Fallback untuk GitHub Pages / Google Sites / Pratinjau
+        fetch(`${API_ENDPOINT_URL}?action=search&keyword=${encodeURIComponent(query)}`)
+          .then(res => res.json())
+          .then(json => {
+            if (json.success) {
+              renderResults(json.data);
+            } else {
+              throw new Error(json.message);
+            }
+          })
+          .catch(err => {
+            btn.disabled = false;
+            btn.innerHTML = `<span>Lacak Naskah</span>`;
+            container.innerHTML = `<div class="p-4 rounded-xl bg-rose-50 text-rose-800 text-xs sm:text-sm">❌ ${err.message}</div>`;
+          });
+      }
+    }
+
+    // 10. Toggle Accordion FAQ
+    function toggleFaq(btn) {
+      const content = btn.nextElementSibling;
+      const icon = btn.querySelector('i');
+      const isHidden = content.classList.contains('hidden');
+
+      if (isHidden) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+  </script>
+</body>
+</html>
